@@ -85,7 +85,7 @@ This loads `data/travel_policy.md`, creates embeddings with Google Gemini, and w
 ```mermaid
 flowchart TD
     A[User Input] --> B[Streamlit App<br/>app.py]
-    B --> C[LangGraph Orchestrator<br/>graph/workflow.py]
+    B --> C[Agent]
 
     C --> D[Claim Extractor]
     D --> E{Are all claim fields complete?}
@@ -94,9 +94,9 @@ flowchart TD
     F --> D
 
     E -- Yes --> G[Limit Checker]
-    G --> H[Receipt Validator]
-    H --> I[Policy Lookup]
-    I --> J[Generate Final Decision / Policy Response]
+    C --> H[Receipt Validator]
+    C --> I[Policy Lookup]
+    C --> J[Generate Final Decision / Policy Response]
     J --> K[Display Result in Streamlit UI]
     J --> L[Generate Audit Trail]
 ```
