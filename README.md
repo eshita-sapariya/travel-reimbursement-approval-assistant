@@ -82,32 +82,23 @@ This loads `data/travel_policy.md`, creates embeddings with Google Gemini, and w
 6. The assistant compiles tool results and returns a structured JSON decision or a policy answer.
 7. The final response is shown in Streamlit along with an audit trail of the reasoning steps.
 
-```text
-User Input
-   |
-   v
-Streamlit App (`app.py`)
-   |
-   v
-LangGraph Orchestrator (`graph/workflow.py`)
-   |
-   +--> `claim_extractor` --> extracted claim fields
-   |        |
-   |        v
-   |    claim complete?
-   |        |
-   |   yes/|\ no
-   |      |  v
-   |      |  Ask for missing fields
-   |      v
-   +--> `limit_checker` --> limit result
-   +--> `receipt_validator` --> receipt result
-   +--> `policy_lookup` --> policy context
-   |
-   v
-Final Decision / Policy Response
-   |
-Streamlit UI output + audit trail
+```mermaid
+flowchart TD
+    A[User Input] --> B[Streamlit App<br/>app.py]
+    B --> C[LangGraph Orchestrator<br/>graph/workflow.py]
+
+    C --> D[Claim Extractor]
+    D --> E{Are all claim fields complete?}
+
+    E -- No --> F[Ask User for Missing Fields]
+    F --> D
+
+    E -- Yes --> G[Limit Checker]
+    G --> H[Receipt Validator]
+    H --> I[Policy Lookup]
+    I --> J[Generate Final Decision / Policy Response]
+    J --> K[Display Result in Streamlit UI]
+    J --> L[Generate Audit Trail]
 ```
 
 ## Usage Notes
