@@ -6,11 +6,11 @@ from graph.workflow import graph
 
 
 st.set_page_config(
-    page_title="Travel Reimbursement Assistant",
+    page_title="Travel Reimbursement Approval Assistant",
     page_icon="✈️"
 )
 
-st.title("✈️ Travel Reimbursement Assistant")
+st.title("✈️ Travel Reimbursement Approval Assistant")
 
 
 # --------------------------------------------------------
@@ -25,7 +25,6 @@ if "agent_state" not in st.session_state:
         "messages": [],
         "agent_messages": [],
         "claim": {},
-        "missing_fields": [],
         "final_answer": "",
         "audit_trail": [],
     }
@@ -36,13 +35,10 @@ if "agent_state" not in st.session_state:
 # --------------------------------------------------------
 
 STEP_ICONS = {
-    "extract_claim":      "🔍",
-    "validate_claim":     "✅",
-    "ask_missing_fields": "❓",
-    "agent_tool_call":    "🤖",
-    "tool_execution":     "🔧",
-    "agent_final":        "💡",
-    "decision":           "⚖️",
+    "agent_tool_call":  "🤖",
+    "tool_execution":   "🔧",
+    "agent_final":      "💡",
+    "decision":         "⚖️",
 }
 
 
@@ -55,30 +51,7 @@ def render_audit_trail(trail: list):
             icon = STEP_ICONS.get(step, "•")
             st.markdown(f"**{icon} Step {i+1}: {entry.get('label', step)}**")
 
-            if step == "extract_claim":
-                st.markdown("**Newly extracted fields:**")
-                newly = entry.get("newly_extracted_fields", {})
-                if newly:
-                    for k, v in newly.items():
-                        st.markdown(f"- `{k}`: `{v}`")
-                else:
-                    st.markdown("- No new fields extracted")
-                with st.popover("Full claim so far"):
-                    st.json(entry.get("full_claim", {}))
-
-            elif step == "validate_claim":
-                status = entry.get("status", "")
-                missing = entry.get("missing_fields", [])
-                if status == "complete":
-                    st.success("All required fields present — proceeding to policy lookup")
-                else:
-                    st.warning(f"Missing fields: `{'`, `'.join(missing)}`")
-
-            elif step == "ask_missing_fields":
-                st.markdown(f"**Fields requested from user:** `{'`, `'.join(entry.get('fields_requested', []))}`")
-                st.markdown(f"**Routed to:** {entry.get('routed_to', '')}")
-
-            elif step == "agent_tool_call":
+            if step == "agent_tool_call":
                 tools_called = entry.get("tools_called", [])
                 st.markdown(f"**Tools decided to call:** `{'`, `'.join(tools_called)}`")
                 for item in entry.get("tool_inputs", []):
@@ -88,7 +61,10 @@ def render_audit_trail(trail: list):
             elif step == "tool_execution":
                 for res in entry.get("results", []):
                     st.markdown(f"**`{res['tool']}`** called with `{res['args']}`")
-                    st.json(res["result"])
+                    if isinstance(res["result"], (dict, list)):
+                        st.json(res["result"])
+                    else:
+                        st.text(str(res["result"]))
 
             elif step == "agent_final":
                 st.success("Agent has enough information — producing final decision")

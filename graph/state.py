@@ -7,9 +7,7 @@ class AgentState(TypedDict):
 
     agent_messages: list    # ReAct loop messages — LangChain BaseMessage objects
 
-    claim: dict
-
-    missing_fields: list
+    claim: dict             # accumulated claim fields across turns
 
     final_answer: str
 
