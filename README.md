@@ -102,11 +102,20 @@ flowchart TD
     J --> L[Generate Audit Trail]
 ```
 
-## Usage Notes
+## Business Rules & Decision Logic
 
-- The assistant expects user inputs describing an expense claim or a policy question.
-- For claim submissions, the agent first extracts fields, then validates receipts, applies limits, and returns a JSON decision.
-- General policy questions trigger a policy lookup instead of a reimbursement decision.
+- Manual review escalation – Triggers manual review when a mandatory receipt is missing.
+- 90-day rule enforcement – Rejects reimbursement claims submitted after 90 days from the expense date.
+- Personal expense validation – Rejects claims containing personal-use expenses.
+- Scope enforcement – The chatbot only handles travel reimbursement policy-related queries.
+- Policy Q&A flow – Uses only the Policy Lookup tool for policy-related questions and skips other workflows.
+
+## Assumptions, Limitations and Further Improvements
+
+- Only a fixed set of expense categories and limits are supported (`hotel`, `meal`, `taxi`, `internet`, plus tickets and visa categories).
+- Non-reimbursable items and future dates are rejected by policy, but the model may still need guidance for unusual expense descriptions.
+- Policy lookup is based on a single travel policy document (`data/travel_policy.md`) and may not cover all organizational policy variants.
+- Receipt upload and verification feature can be implemented wherein users can upload receipts, from which the system extracts and verifies details before generating the final output.
 
 ## Troubleshooting
 
