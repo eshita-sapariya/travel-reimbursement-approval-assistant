@@ -94,9 +94,10 @@ flowchart TD
     F --> D
 
     E -- Yes --> G[Limit Checker]
-    C --> H[Receipt Validator]
-    C --> I[Policy Lookup]
-    C --> J[Generate Final Decision / Policy Response]
+    G --> H[Receipt Validator]
+    H --> I[Policy Lookup]
+    I --> J[Generate Final Decision / Policy Response]
+
     J --> K[Display Result in Streamlit UI]
     J --> L[Generate Audit Trail]
 ```
