@@ -6,12 +6,12 @@ A Streamlit-based assistant that evaluates travel reimbursement claims using an 
 
 1. Clone or open this repository.
 2. Create a Python virtual environment:
-   ```powershell
-   python -m venv .venv
-   .\.venv\Scripts\Activate.ps1
+   ```cmd
+   python -m venv venv
+   venv\scripts\activate
    ```
 3. Install dependencies:
-   ```powershell
+   ```cmd
    pip install -r requirements.txt
    ```
 4. Create a `.env` file in the project root with your Google API key:
