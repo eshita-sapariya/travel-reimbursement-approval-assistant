@@ -6,12 +6,12 @@ A Streamlit-based assistant that evaluates travel reimbursement claims using an 
 
 1. Clone or open this repository.
 2. Create a Python virtual environment:
-   ```powershell
-   python -m venv .venv
-   .\.venv\Scripts\Activate.ps1
+   ```cmd
+   python -m venv venv
+   venv\scripts\activate
    ```
 3. Install dependencies:
-   ```powershell
+   ```cmd
    pip install -r requirements.txt
    ```
 4. Create a `.env` file in the project root with your Google API key:
@@ -82,40 +82,40 @@ This loads `data/travel_policy.md`, creates embeddings with Google Gemini, and w
 6. The assistant compiles tool results and returns a structured JSON decision or a policy answer.
 7. The final response is shown in Streamlit along with an audit trail of the reasoning steps.
 
-```text
-User Input
-   |
-   v
-Streamlit App (`app.py`)
-   |
-   v
-LangGraph Orchestrator (`graph/workflow.py`)
-   |
-   +--> `claim_extractor` --> extracted claim fields
-   |        |
-   |        v
-   |    claim complete?
-   |        |
-   |   yes/|\ no
-   |      |  v
-   |      |  Ask for missing fields
-   |      v
-   +--> `limit_checker` --> limit result
-   +--> `receipt_validator` --> receipt result
-   +--> `policy_lookup` --> policy context
-   |
-   v
-Final Decision / Policy Response
-   |
-Streamlit UI output + audit trail
+```mermaid
+flowchart TD
+    A[User Input] --> B[Streamlit App<br/>app.py]
+    B --> C[Agent]
+
+    C --> D[Claim Extractor]
+    D --> E{Are all claim fields complete?}
+
+    E -- No --> F[Ask User for Missing Fields]
+    F --> D
+
+    E -- Yes --> G[Limit Checker]
+    G --> H[Receipt Validator]
+    H --> I[Policy Lookup]
+    I --> J[Generate Final Decision / Policy Response]
+
+    J --> K[Display Result in Streamlit UI]
+    J --> L[Generate Audit Trail]
 ```
 
-## Usage Notes
+## Business Rules & Decision Logic
 
-- The assistant expects user inputs describing an expense claim or a policy question.
-- For claim submissions, the agent first extracts fields, then validates receipts, applies limits, and returns a JSON decision.
-- General policy questions trigger a policy lookup instead of a reimbursement decision.
-- Claims older than 90 days or with future expense dates are rejected by policy.
+- Manual review escalation – Triggers manual review when a mandatory receipt is missing.
+- 90-day rule enforcement – Rejects reimbursement claims submitted after 90 days from the expense date.
+- Personal expense validation – Rejects claims containing personal-use expenses.
+- Scope enforcement – The chatbot only handles travel reimbursement policy-related queries.
+- Policy Q&A flow – Uses only the Policy Lookup tool for policy-related questions and skips other workflows.
+
+## Assumptions, Limitations and Further Improvements
+
+- Only a fixed set of expense categories and limits are supported (`hotel`, `meal`, `taxi`, `internet`, plus tickets and visa categories).
+- Non-reimbursable items and future dates are rejected by policy, but the model may still need guidance for unusual expense descriptions.
+- Policy lookup is based on a single travel policy document (`data/travel_policy.md`) and may not cover all organizational policy variants.
+- Receipt upload and verification feature can be implemented wherein users can upload receipts, from which the system extracts and verifies details before generating the final output.
 
 ## Troubleshooting
 
