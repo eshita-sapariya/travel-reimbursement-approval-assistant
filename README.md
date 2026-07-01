@@ -106,7 +106,6 @@ flowchart TD
 - The assistant expects user inputs describing an expense claim or a policy question.
 - For claim submissions, the agent first extracts fields, then validates receipts, applies limits, and returns a JSON decision.
 - General policy questions trigger a policy lookup instead of a reimbursement decision.
-- Claims older than 90 days or with future expense dates are rejected by policy.
 
 ## Troubleshooting
 
