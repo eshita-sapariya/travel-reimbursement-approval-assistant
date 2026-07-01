@@ -1,7 +1,5 @@
 import json
-
 from langchain.tools import tool
-
 from utils.llm import llm
 from models.claim import Claim
 from prompts.prompts import CLAIM_EXTRACTION_PROMPT

@@ -1,5 +1,4 @@
 from langchain.tools import tool
-
 from rag.retriever import PolicyRetriever
 
 retriever = PolicyRetriever()

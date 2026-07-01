@@ -1,9 +1,7 @@
 import json
 import uuid
 import streamlit as st
-
 from graph.workflow import graph
-
 
 st.set_page_config(
     page_title="Travel Reimbursement Approval Assistant",
@@ -13,9 +11,7 @@ st.set_page_config(
 st.title("✈️ Travel Reimbursement Approval Assistant")
 
 
-# --------------------------------------------------------
 # Initialize Session State
-# --------------------------------------------------------
 
 if "thread_id" not in st.session_state:
     st.session_state.thread_id = str(uuid.uuid4())
@@ -30,9 +26,7 @@ if "agent_state" not in st.session_state:
     }
 
 
-# --------------------------------------------------------
 # Render a decision JSON as a formatted card
-# --------------------------------------------------------
 
 STEP_ICONS = {
     "agent_tool_call":  "🤖",
@@ -125,9 +119,7 @@ def render_decision(text: str):
         st.warning("**Missing Documents:** " + ", ".join(missing_docs))
 
 
-# --------------------------------------------------------
 # Display Chat History
-# --------------------------------------------------------
 
 for message in st.session_state.agent_state["messages"]:
     with st.chat_message(message["role"]):
@@ -137,9 +129,7 @@ for message in st.session_state.agent_state["messages"]:
             st.markdown(message["content"])
 
 
-# --------------------------------------------------------
 # User Input
-# --------------------------------------------------------
 
 user_input = st.chat_input("Describe your travel expense claim...")
 

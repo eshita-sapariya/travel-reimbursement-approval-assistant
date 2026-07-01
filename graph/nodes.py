@@ -42,10 +42,7 @@ def extract_json(text: str) -> str:
         return match.group(0)
     return text
 
-
-# ----------------------------------------------------------
 # Agent Node (Orchestrator + ReAct)
-# ----------------------------------------------------------
 
 def agent_node(state):
 
@@ -96,9 +93,7 @@ def agent_node(state):
     }
 
 
-# ----------------------------------------------------------
 # Tool Execution Node
-# ----------------------------------------------------------
 
 def tool_execution_node(state):
 
@@ -158,9 +153,8 @@ def tool_execution_node(state):
     }
 
 
-# ----------------------------------------------------------
+
 # Finalize Node
-# ----------------------------------------------------------
 
 def finalize_node(state):
 

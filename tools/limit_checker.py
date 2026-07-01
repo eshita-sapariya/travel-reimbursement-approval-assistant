@@ -1,6 +1,5 @@
 from langchain.tools import tool
 
-
 LIMITS = {
     ("hotel", "domestic"):         5000,
     ("hotel", "international"):    12000,
